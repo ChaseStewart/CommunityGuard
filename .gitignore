@@ -1,0 +1,3 @@
+# exclude all config files
+*.cfg
+
