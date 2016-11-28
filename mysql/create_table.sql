@@ -48,5 +48,5 @@ GRANT SELECT ON adv_netsys_final.bad_ipv4_output TO 'dbreader'@'localhost';
 GRANT USAGE ON adv_netsys_final.* TO 'newdbadmin'@'localhost';
 DROP USER 'newdbadmin'@'localhost';
 CREATE USER 'newdbadmin'@'localhost' IDENTIFIED BY 'I!AmTheFly';
-GRANT ALL ON adv_netsys_final.* TO 'dbadmin'@'localhost';
+GRANT ALL ON adv_netsys_final.* TO 'newdbadmin'@'localhost';
 
