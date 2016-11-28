@@ -13,19 +13,22 @@ USE adv_netsys_final;
 /* Create all necessary tables*/
 
 -- Input table that all users can post to but nobody can read from
-CREATE TABLE bad_ipv4_input( ip_addr INT UNSIGNED NOT NULL, mac_addr BIGINT UNSIGNED NOT NULL, primary key (mac_addr) );
+CREATE TABLE bad_ipv4_input( id INT AUTO_INCREMENT, ip_addr INT UNSIGNED NOT NULL, mac_addr BIGINT UNSIGNED NOT NULL, primary key (id) );
 
 -- Output table that all users can read from but nobody can post to
 CREATE TABLE bad_ipv4_output( ip_addr INT UNSIGNED NOT NULL, flag_count BIGINT UNSIGNED NOT NULL, primary key (ip_addr) );
 
 -- Intermediate table that holds unique mac_addrs users that are allowed to post
 CREATE TABLE mac_addr_registry (id INT AUTO_INCREMENT, mac_addr BIGINT UNSIGNED, primary key (id) );
+INSERT INTO mac_addr_registry(mac_addr) VALUE (2399075638897);
 
 -- Intermediate table that holds number of valid flags needed to blacklist a page
 CREATE TABLE flag_count (valid_flag_count BIGINT UNSIGNED, num_reg_users BIGINT UNSIGNED, primary key (num_reg_users) );
 
 -- Intermediate table that keeps all matches of valid MACADDR and IP
-CREATE TABLE bad_ipv4_master_list ( ip_addr INT UNSIGNED NOT NULL, mac_addr BIGINT UNSIGNED NOT NULL, primary key (mac_addr) );
+CREATE TABLE bad_ipv4_master_list ( id INT UNSIGNED NOT NULL AUTO_INCREMENT, hash BINARY(16) NOT NULL, primary key (id) );
+
+
 
 
 

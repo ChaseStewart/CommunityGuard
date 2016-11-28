@@ -23,7 +23,7 @@ class malicious_ip_class:
 	# load ips from blacklist.txt file
 	def get_ips_from_file(self):
 		config = ConfigParser.RawConfigParser()
-		config.read('snort_conf.cfg')
+		config.read('bbb_cron_conf.cfg')
 		self.blacklist_path = config.get("pycron","blacklist-path")	
 		with open(self.blacklist_path, "r") as f:
 			for line in f:
@@ -85,13 +85,11 @@ class malicious_ip_class:
 		con = None
 		con = MySQLdb.connect(user=self.pushuser,passwd=self.password,db=self.db,host='127.0.0.1',port=self.port)
 		cur = con.cursor()
+		print("ADDING THESE IPS"+str(self.ip_list))
 		for ip in self.ip_list:
 			ip_num = struct.unpack("!I",socket.inet_aton(ip))[0]
 			print (ip_num)
-			try:
-				cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, mac_addr) VALUES (%s,%s);""",(ip_num,self.my_mac))
-			except:
-				pass	
+			cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, mac_addr) VALUES (%s,%s);""",(ip_num,self.my_mac))
 		con.commit()
 
 if __name__ == '__main__':
