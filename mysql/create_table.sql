@@ -27,7 +27,8 @@ CREATE TABLE flag_count (valid_flag_count BIGINT UNSIGNED, num_reg_users BIGINT 
 -- Intermediate table that keeps all matches of valid MACADDR and IP
 CREATE TABLE bad_ipv4_master_list ( id INT UNSIGNED NOT NULL AUTO_INCREMENT, hash BINARY(16) NOT NULL, primary key (id) );
 
-
+-- DDoS prevention table
+CREATE TABLE ddos_watch_list (id INT UNSIGNED NOT NULL AUTO_INCREMENT, ip_addr INT UNSIGNED NOT NULL, primary key (id));
 
 
 
@@ -39,12 +40,14 @@ GRANT USAGE ON adv_netsys_final.* TO 'dbwriter'@'localhost';
 DROP USER 'dbwriter'@'localhost';
 CREATE USER 'dbwriter'@'localhost' IDENTIFIED BY 'I!AmTheFly';
 GRANT INSERT ON adv_netsys_final.bad_ipv4_input TO 'dbwriter'@'localhost';
+GRANT INSERT ON adv_netsys_final.mac_addr_registry TO 'dbwriter'@'localhost';
 
 -- DBWriter is used to write to the bad_ipv4_input table
 GRANT USAGE ON adv_netsys_final.* TO 'dbreader'@'localhost';
 DROP USER 'dbreader'@'localhost';
 CREATE USER 'dbreader'@'localhost' IDENTIFIED BY 'I!AmTheFly';
 GRANT SELECT ON adv_netsys_final.bad_ipv4_output TO 'dbreader'@'localhost';
+GRANT SELECT ON adv_netsys_final.ddos_watch_list TO 'dbreader'@'localhost';
 
 -- DBAdmin is not accessible by users and is used to run the intermediate cron commands that turn input into output
 GRANT USAGE ON adv_netsys_final.* TO 'newdbadmin'@'localhost';
