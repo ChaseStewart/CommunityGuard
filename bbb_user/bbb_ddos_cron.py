@@ -24,10 +24,9 @@ class ddos_cron_class:
 		self.pulluser='dbreader'
 		self.password='I!AmTheFly'
 		self.db='adv_netsys_final'
-		self.ddos_ip_list=[]
 		self.received_ip_list=[]
 		self.ip_dict = {}
-		self.ddos_path=""
+		self.ddos_ip_path=""
 		self.ddos_rule_path=""
 
 
@@ -43,13 +42,15 @@ class ddos_cron_class:
 	def get_ddos_ips(self):
 		config = ConfigParser.RawConfigParser()
 		config.read('bbb_cron_conf.cfg')
-		self.ddos_path = config.get("pycron","ddos-ip-path")	
-		self.ddos_rule_path = config.get("pycron","ddos-ip-path")	
-		with open(self.blacklist_path, "r") as f:
+		self.ddos_ip_path = config.get("ddos","ddos-ip-path")	
+		self.ddos_rule_path = config.get("ddos","ddos-rule-path")	
+		with open(self.ddos_ip_path, "r") as f:
 			for line in f:
+				line = line.strip("\n")
 				if line not in self.ip_dict.keys():
+					print("line is <"+line+">")
+					print("FILE: adding "+line)
 					self.ip_dict[line]=(True,False)
-
 
 
 	def ddos_pull(self):
@@ -70,46 +71,55 @@ class ddos_cron_class:
 		# first get and process IPs from server
 		for (ip) in cur:
 			ip_num = socket.inet_ntoa(struct.pack("!I",ip[0]))
+			self.received_ip_list.append(ip_num)
+			print("line is <"+ip_num+">")
 			if ip_num not in self.ip_dict.keys():
 				self.ip_dict[ip_num]=(False,True)
+				print("AWS: adding "+ip_num)
 			else:
-				self.ip_dict[ip_num][1] = True;
-
+				self.ip_dict[ip_num] = (True,True);
+				print("AWS: list already has "+ip_num)
 		# now process received data
 		for ip in self.ip_dict.keys():
+			print 
+			
 			# remove from list
 			if self.ip_dict[ip][0] == True and self.ip_dict[ip][1] == False:
+				print("REMOVING OLD COMMANDS")
 				remove_file = ""
-				with open(self.ddos_rule_path,"r+") as f:
+				with open(self.ddos_rule_path,"w+") as f:
 
 					# keep all lines that do not feature given IP
 					for line in f.readlines():
+						print("line is <"+line+"> and new ip is <"+ip+">")
 						if ip not in line:
 							remove_file=remove_file+line+"\n"
 
 					# write back all lines except ones featuring ip addr 
 					f.write(remove_file)
-							
+
+			
 							
 			# added to list
-			elif ip[0] == False and ip[1] == True:
+			elif self.ip_dict[ip][0] == False and self.ip_dict[ip][1] == True:
+				print("ADDING NEW COMMANDS")
 				new_command=""
 				with open(self.ddos_rule_path,"a") as f:
 
 					# write IP addr into new command and append it
-					process_command = ddos_block_rule_ip.split("[")[0]
-					new_command = new_command+process_command[0]+ip+process_command[1]
-					process_command = ddos_block_rule_icmp.split("[")[0]
-					new_command = new_command+process_command[0]+ip+process_command[1]
-					process_command = ddos_block_rule_udp.split("[")[0]
-					new_command = new_command+process_command[0]+ip+process_command[1]
-					process_command = ddos_block_rule_tcp.split("[")[0]
-					new_command = new_command+process_command[0]+ip+process_command[1]
+					process_command = ddos_block_rule_ip.split("[")
+					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+					process_command = ddos_block_rule_icmp.split("[")
+					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+					process_command = ddos_block_rule_udp.split("[")
+					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+					process_command = ddos_block_rule_tcp.split("[")
+					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
 					f.write(new_command+"\n")
 
 		# now that whole list is processed, replace ddos_path
-		with open(self.ddos_path, "w") as f:
-			for ip in self.received_list:
+		with open(self.ddos_ip_path, "w") as f:
+			for ip in self.received_ip_list:
 				f.write(ip+"\n")
 
 		return
