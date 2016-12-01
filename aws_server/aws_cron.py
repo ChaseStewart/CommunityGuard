@@ -42,7 +42,7 @@ class aws_cron_class:
 		con = None
 		con = MySQLdb.connect(user=self.user,passwd=self.password,db=self.db,host='127.0.0.1',port=self.port)
 		cur = con.cursor()
-		cur.execute("""SELECT DISTINCT mac_addr FROM mac_addr_registry;""")
+		cur.execute("""SELECT DISTINCT hash_val FROM mac_addr_registry;""")
 		for macaddr in cur:
 			self.valid_mac_list.append(macaddr[0]);
 
@@ -52,14 +52,14 @@ class aws_cron_class:
 		con = None
 		con = MySQLdb.connect(user=self.user,passwd=self.password,db=self.db,host='127.0.0.1',port=self.port)
 		cur = con.cursor()
-		cur.execute("""SELECT DISTINCT ip_addr, mac_addr FROM bad_ipv4_input;""")
+		cur.execute("""SELECT DISTINCT ip_addr, hash_val FROM bad_ipv4_input;""")
 		
 		for item in cur:
-			mac = item[1]
+			hashval = item[1]
 			ip = item[0]
-			if mac in self.valid_mac_list:
+			if hashval in self.valid_mac_list:
 				print str(ip)
-				self.in_list.append((ip,mac))
+				self.in_list.append((ip,hashval))
 		print("in list is"+str(self.in_list))	
 		#cur.execute(""" TRUNCATE bad_ipv4_input""");
 		con.commit()
@@ -72,7 +72,7 @@ class aws_cron_class:
 		con = MySQLdb.connect(user=self.user,passwd=self.password,db=self.db,host='127.0.0.1',port=self.port)
 		cur = con.cursor()
 
-		cur.execute("""SELECT DISTINCT ip_addr, mac_addr from bad_ipv4_input;""")
+		cur.execute("""SELECT DISTINCT ip_addr, hash_val from bad_ipv4_input;""")
 
 		for item in self.in_list:
 			mac_ip_hash = hashlib.md5()
