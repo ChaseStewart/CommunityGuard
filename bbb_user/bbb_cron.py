@@ -14,6 +14,7 @@ class malicious_ip_class:
 	def __init__(self):
 		self.blacklist_path=""
 		self.port=3306
+		self.private_key=""
 		self.pushuser='dbwriter'
 		self.pulluser='dbreader'
 		self.password='I!AmTheFly'
@@ -31,6 +32,7 @@ class malicious_ip_class:
 		self.blacklist_path = config.get("pycron","blacklist-path")	
 		self.salt_hash = config.get("pycron","salt-hash")	
 		self.aws_ip = config.get("pycron","aws-ip")	
+		self.private_key = config.get("pycron","private-key-path")	
 		with open(self.blacklist_path, "r") as f:
 			for line in f:
 				self.ip_list.append(line)
@@ -48,7 +50,7 @@ class malicious_ip_class:
 		with SSHTunnelForwarder(
 			('35.160.253.104', 22),
 			#  ssh_password="password",
-			ssh_private_key="/home/debian/project_private_key.pem",
+			ssh_private_key=self.private_key,
 			ssh_username="ec2-user",
 			remote_bind_address=('127.0.0.1', 3306)) as server:
 		
@@ -81,7 +83,7 @@ class malicious_ip_class:
 		with SSHTunnelForwarder(
 			('35.160.253.104', 22),
 			#  ssh_password="password",
-			ssh_private_key="/home/debian/project_private_key.pem",
+			ssh_private_key=self.private_key,
 			ssh_username="ec2-user",
 			remote_bind_address=('127.0.0.1', 3306)) as server:
 
