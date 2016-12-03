@@ -62,7 +62,6 @@ class malicious_ip_class:
 
 				for (ip) in cur:
 					ip_num = socket.inet_ntoa(struct.pack("!I",ip[0]))
-					print (str(ip[0])+" is the num and ascii is "+ip_num)
 					self.ip_list.append(ip_num)	
 
 				with open(self.blacklist_path, "r") as f:
@@ -70,7 +69,6 @@ class malicious_ip_class:
 
 				for i in range(len(current_ip_list)):
 					current_ip_list[i]= current_ip_list[i].replace("\n","")
-				print(str(current_ip_list))
 
 				with open(self.blacklist_path, "a+") as f:
 					for ip in self.ip_list:
@@ -90,17 +88,17 @@ class malicious_ip_class:
 				con = None
 				con = MySQLdb.connect(user=self.pushuser,passwd=self.password,db=self.db,host='127.0.0.1',port=server.local_bind_port)
 				cur = con.cursor()
-				print("ADDING THESE IPS"+str(self.ip_list))
 				mac_ip_hash = hashlib.md5()
 				mac_ip_hash.update(str(self.salt_hash))
 				mac_ip_hash.update(str(self.my_mac))
 				self.hash_val = mac_ip_hash.hexdigest()
-				cur.execute("INSERT INTO mac_addr_registry (hash_val) VALUES (\""+self.hash_val+"\");")
+				#cur.execute("INSERT INTO mac_addr_registry (hash_val) VALUES (\""+self.hash_val+"\");")
 				
 				for ip in self.ip_list:
-					ip_num = struct.unpack("!I",socket.inet_aton(ip))[0]
-					print (ip_num)
-					cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, hash_val) VALUES (%s,%s);""",(ip_num,self.hash_val))
+					if ip != "\n":
+						ip_num = struct.unpack("!I",socket.inet_aton(ip))[0]
+						print ("IP "+str(ip_num)+" complete")
+						cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, hash_val) VALUES (%s,%s);""",(ip_num,self.hash_val))
 				con.commit()
 				return
 
