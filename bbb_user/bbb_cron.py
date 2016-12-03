@@ -1,4 +1,4 @@
-#from sshtunnel import SSHTunnelForwarder
+from sshtunnel import SSHTunnelForwarder
 import MySQLdb
 import socket
 import struct
@@ -22,6 +22,7 @@ class malicious_ip_class:
 		self.ip_list=[]
 		self.salt_hash=""
 		self.hash_val=""
+		self.aws_ip=""
 
 	# load ips from blacklist.txt file
 	def get_ips_from_file(self):
@@ -29,6 +30,7 @@ class malicious_ip_class:
 		config.read('bbb_cron_conf.cfg')
 		self.blacklist_path = config.get("pycron","blacklist-path")	
 		self.salt_hash = config.get("pycron","salt-hash")	
+		self.aws_ip = config.get("pycron","aws-ip")	
 		with open(self.blacklist_path, "r") as f:
 			for line in f:
 				self.ip_list.append(line)
@@ -43,65 +45,62 @@ class malicious_ip_class:
 		self.blacklist_pull()
 
 	def blacklist_pull(self):
-	#    try:
-	#        with SSHTunnelForwarder(
-	#                 ('35.160.253.104', 22),
-	#               #  ssh_password="password",
-	#                 ssh_private_key="/home/osboxes/project_private_key.pem",
-	#                 ssh_username="ec2-user",
-	#                 remote_bind_address=('127.0.0.1', 3306)) as server:
-
+		with SSHTunnelForwarder(
+			('35.160.253.104', 22),
+			#  ssh_password="password",
+			ssh_private_key="/home/debian/project_private_key.pem",
+			ssh_username="ec2-user",
+			remote_bind_address=('127.0.0.1', 3306)) as server:
 		
-		self.ip_list = []
-		con = None
-		con = MySQLdb.connect(user=self.pulluser,passwd=self.password,db=self.db,host='127.0.0.1',port=self.port)
-		cur = con.cursor()
-		cur.execute("""SELECT ip_addr FROM bad_ipv4_output WHERE flag_count > 0;""")
+				self.ip_list = []
+				con = None
+				con = MySQLdb.connect(user=self.pulluser,passwd=self.password,db=self.db,host='127.0.0.1',port=server.local_bind_port)
+				cur = con.cursor()
+				cur.execute("""SELECT ip_addr FROM bad_ipv4_output WHERE flag_count > 0;""")
 
-		for (ip) in cur:
-			ip_num = socket.inet_ntoa(struct.pack("!I",ip[0]))
-			print (str(ip[0])+" is the num and ascii is "+ip_num)
-			self.ip_list.append(ip_num)	
+				for (ip) in cur:
+					ip_num = socket.inet_ntoa(struct.pack("!I",ip[0]))
+					print (str(ip[0])+" is the num and ascii is "+ip_num)
+					self.ip_list.append(ip_num)	
 
-		with open(self.blacklist_path, "r") as f:
-			current_ip_list = f.readlines()
+				with open(self.blacklist_path, "r") as f:
+					current_ip_list = f.readlines()
 
-		for i in range(len(current_ip_list)):
-			current_ip_list[i]= current_ip_list[i].replace("\n","")
-		print(str(current_ip_list))
+				for i in range(len(current_ip_list)):
+					current_ip_list[i]= current_ip_list[i].replace("\n","")
+				print(str(current_ip_list))
 
-		with open(self.blacklist_path, "a+") as f:
-			for ip in self.ip_list:
-				if ip not in current_ip_list:
-					f.write(ip+"\n")
-		return
+				with open(self.blacklist_path, "a+") as f:
+					for ip in self.ip_list:
+						if ip not in current_ip_list:
+							f.write(ip+"\n")
+				return
 
 
 	def blacklist_push(self):
-	#    try:
-	#        with SSHTunnelForwarder(
-	#                 ('35.160.253.104', 22),
-	#               #  ssh_password="password",
-	#                 ssh_private_key="/home/osboxes/project_private_key.pem",
-	#                 ssh_username="ec2-user",
-	#                 remote_bind_address=('127.0.0.1', 3306)) as server:
+		with SSHTunnelForwarder(
+			('35.160.253.104', 22),
+			#  ssh_password="password",
+			ssh_private_key="/home/debian/project_private_key.pem",
+			ssh_username="ec2-user",
+			remote_bind_address=('127.0.0.1', 3306)) as server:
 
-		con = None
-		con = MySQLdb.connect(user=self.pushuser,passwd=self.password,db=self.db,host='127.0.0.1',port=self.port)
-		cur = con.cursor()
-		print("ADDING THESE IPS"+str(self.ip_list))
-		mac_ip_hash = hashlib.md5()
-		mac_ip_hash.update(str(self.salt_hash))
-		mac_ip_hash.update(str(self.my_mac))
-		self.hash_val = mac_ip_hash.digest()
-		print(self.hash_val)
-		cur.execute("""INSERT INTO mac_addr_registry (hash_val) VALUES (%s);""",(self.hash_val))
-		
-		for ip in self.ip_list:
-			ip_num = struct.unpack("!I",socket.inet_aton(ip))[0]
-			print (ip_num)
-			cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, hash_val) VALUES (%s,%s);""",(ip_num,self.hash_val))
-		con.commit()
+				con = None
+				con = MySQLdb.connect(user=self.pushuser,passwd=self.password,db=self.db,host='127.0.0.1',port=server.local_bind_port)
+				cur = con.cursor()
+				print("ADDING THESE IPS"+str(self.ip_list))
+				mac_ip_hash = hashlib.md5()
+				mac_ip_hash.update(str(self.salt_hash))
+				mac_ip_hash.update(str(self.my_mac))
+				self.hash_val = mac_ip_hash.hexdigest()
+				cur.execute("INSERT INTO mac_addr_registry (hash_val) VALUES (\""+self.hash_val+"\");")
+				
+				for ip in self.ip_list:
+					ip_num = struct.unpack("!I",socket.inet_aton(ip))[0]
+					print (ip_num)
+					cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, hash_val) VALUES (%s,%s);""",(ip_num,self.hash_val))
+				con.commit()
+				return
 
 if __name__ == '__main__':
 	push_object = malicious_ip_class()
