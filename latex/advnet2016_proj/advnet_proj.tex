@@ -1,0 +1,62 @@
+\documentclass{sig-alternate-10pt}
+
+\usepackage{graphics}
+\usepackage{epsfig}
+%\usepackage{appendix}
+\usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{url} 
+\usepackage{underscore}
+
+\usepackage{times}
+
+%
+% Get rid of excess white space, commands copied from:
+% http://www.terminally-incoherent.com/blog/2007/09/19/latex-squeezing-the-vertical-white-space/
+%
+\usepackage{mdwlist}
+
+%SOME USEFUL COMMANDS
+% Use: \paragraphb{Blah}: blah blah -- this will make the paragraph start with bold text and not be indented
+%    : (\eg Blah) -- will add the text e.g., in italics
+%    : \comment{Blah} -- will add the text in braces in a certain color
+
+\newcommand{\eg}{{\em e.g., }}
+\newcommand{\ie}{{\em i.e., }}
+\newcommand{\paragraphb}[1]{\vspace{0.03in}\noindent{\bf #1} }
+\newcommand{\paragraphe}[1]{\vspace{0.03in}\noindent{\em #1} }
+\newcommand{\paragraphbe}[1]{\vspace{0.03in}\noindent{\bf \em #1} }
+\newcommand{\comment}[1]{\textcolor{purple}{#1}}
+
+\title{Avant Guard- In-Line embedded IDS with crowdsourced security}
+
+\author{Chase E Stewart, Anne Maria Vasu \\ 
+        {chst9148,anva7676}@colorado.edu}
+
+% For Multiple Authors:
+%\author{Eric Keller, Donald Trump \\ 
+%        {eric.keller, donald.trump}@colorado.edu}
+
+\begin{document}
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+
+\thispagestyle{empty}
+
+\maketitle
+
+
+%% Have one file per section, and include them all here
+
+\input{abstract}
+\input{introduction}
+\input{architecture}
+\input{conclusion}
+
+\pagebreak
+
+%\footnotesize
+\bibliography{refs}
+\bibliographystyle{abbrv}
+
+\end{document}
