@@ -1,4 +1,4 @@
-#from sshtunnel import SSHTunnelForwarder
+from sshtunnel import SSHTunnelForwarder
 import MySQLdb
 import socket
 import struct
@@ -54,68 +54,67 @@ class ddos_cron_class:
 
 
 	def ddos_pull(self):
-	#    try:
-	#        with SSHTunnelForwarder(
-	#                 ('35.160.253.104', 22),
-	#               #  ssh_password="password",
-	#                 ssh_private_key="/home/osboxes/project_private_key.pem",
-	#                 ssh_username="ec2-user",
-	#                 remote_bind_address=('127.0.0.1', 3306)) as server:
+		with SSHTunnelForwarder(
+			('35.160.253.104', 22),
+			#  ssh_password="password",
+			ssh_private_key="/home/debian/project_private_key.pem",
+			ssh_username="ec2-user",
+			remote_bind_address=('127.0.0.1', 3306)) as server:
 
-		self.ip_list = []
-		con = None
-		con = MySQLdb.connect(user=self.pulluser,passwd=self.password,db=self.db,host='127.0.0.1',port=self.port)
-		cur = con.cursor()
-		cur.execute("""SELECT ip_addr FROM ddos_watch_list;""")
+				self.ip_list = []
+				con = None
+				con = MySQLdb.connect(user=self.pulluser,passwd=self.password,db=self.db,host='127.0.0.1',port=server.local_bind_port)
+				cur = con.cursor()
+				cur.execute("""SELECT ip_addr FROM ddos_watch_list;""")
 
-		# first get and process IPs from server
-		for (ip) in cur:
-			ip_num = socket.inet_ntoa(struct.pack("!I",ip[0]))
-			self.received_ip_list.append(ip_num)
-			print("line is <"+ip_num+">")
-			if ip_num not in self.ip_dict.keys():
-				self.ip_dict[ip_num]=(False,True)
-				print("AWS: adding "+ip_num)
-			else:
-				self.ip_dict[ip_num] = (True,True);
-				print("AWS: list already has "+ip_num)
-		# now process received data
-		for ip in self.ip_dict.keys():
-			print 
-			
-			# remove from list
-			if self.ip_dict[ip][0] == True and self.ip_dict[ip][1] == False:
-				print("REMOVING OLD COMMANDS")
-				remove_file = ""
-				with open(self.ddos_rule_path,"w+") as f:
+				# first get and process IPs from server
+				for (ip) in cur:
+					ip_num = socket.inet_ntoa(struct.pack("!I",ip[0]))
+					self.received_ip_list.append(ip_num)
+					print("line is <"+ip_num+">")
+					if ip_num not in self.ip_dict.keys():
+						self.ip_dict[ip_num]=(False,True)
+						print("AWS: adding "+ip_num)
+					else:
+						self.ip_dict[ip_num] = (True,True);
+						print("AWS: list already has "+ip_num)
+				# now process received data
+				for ip in self.ip_dict.keys():
+					print 
+					
+					# remove from list
+					if self.ip_dict[ip][0] == True and self.ip_dict[ip][1] == False:
+						print("REMOVING OLD COMMANDS")
+						remove_file = ""
+						with open(self.ddos_rule_path,"w+") as f:
 
-					# keep all lines that do not feature given IP
-					for line in f.readlines():
-						print("line is <"+line+"> and new ip is <"+ip+">")
-						if ip not in line:
-							remove_file=remove_file+line+"\n"
+							# keep all lines that do not feature given IP
+							for line in f.readlines():
+								print("line is <"+line+"> and new ip is <"+ip+">")
+								if ip not in line:
+									remove_file=remove_file+line+"\n"
 
-					# write back all lines except ones featuring ip addr 
-					f.write(remove_file)
+							# write back all lines except ones featuring ip addr 
+							f.write(remove_file)
 
-			
-							
-			# added to list
-			elif self.ip_dict[ip][0] == False and self.ip_dict[ip][1] == True:
-				print("ADDING NEW COMMANDS")
-				new_command=""
-				with open(self.ddos_rule_path,"a") as f:
+					
+									
+					# added to list
+					elif self.ip_dict[ip][0] == False and self.ip_dict[ip][1] == True:
+						print("ADDING NEW COMMANDS")
+						new_command=""
+						with open(self.ddos_rule_path,"a") as f:
 
-					# write IP addr into new command and append it
-					process_command = ddos_block_rule_ip.split("[")
-					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
-					process_command = ddos_block_rule_icmp.split("[")
-					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
-					process_command = ddos_block_rule_udp.split("[")
-					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
-					process_command = ddos_block_rule_tcp.split("[")
-					new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
-					f.write(new_command+"\n")
+							# write IP addr into new command and append it
+							process_command = ddos_block_rule_ip.split("[")
+							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							process_command = ddos_block_rule_icmp.split("[")
+							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							process_command = ddos_block_rule_udp.split("[")
+							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							process_command = ddos_block_rule_tcp.split("[")
+							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							f.write(new_command+"\n")
 
 		# now that whole list is processed, replace ddos_path
 		with open(self.ddos_ip_path, "w") as f:
