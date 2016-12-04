@@ -93,9 +93,9 @@ class malicious_ip_class:
 		mac_ip_hash = hashlib.md5()
 		mac_ip_hash.update(str(self.salt_hash))
 		mac_ip_hash.update(str(self.my_mac))
-		self.hash_val = mac_ip_hash.digest()
+		self.hash_val = mac_ip_hash.hexdigest()
 		print(self.hash_val)
-		cur.execute("""INSERT INTO mac_addr_registry (hash_val) VALUES (%s);""",(self.hash_val))
+		cur.execute("INSERT INTO mac_addr_registry (hash_val) VALUE (%s);",self.hash_val)
 		
 		for ip in self.ip_list:
 			ip_num = struct.unpack("!I",socket.inet_aton(ip))[0]
