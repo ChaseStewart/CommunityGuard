@@ -5,12 +5,15 @@ import struct
 import ConfigParser
 import io
 from uuid import getnode as get_mac
+import random
 
+min_sid_val = 5000000
+max_sid_val = 5999999
 
-ddos_block_rule_tcp = "drop tcp $HOME_NET any -> [] any (msg \"Home device attempting to send to currently DDOSed server\")"
-ddos_block_rule_udp = "drop udp $HOME_NET any -> [] any (msg \"Home device attempting to send to currently DDOSed server\")"
-ddos_block_rule_icmp = "drop icmp $HOME_NET any -> [] any (msg \"Home device attempting to send to currently DDOSed server\")"
-ddos_block_rule_ip = "drop ip $HOME_NET any -> [] any (msg \"Home device attempting to send to currently DDOSed server\")"
+ddos_block_rule_tcp = "drop tcp $HOME_NET any -> [] any (msg: \"Home device attempting to send to currently DDOSed server\"; sid:&;)"
+ddos_block_rule_udp = "drop udp $HOME_NET any -> [] any (msg: \"Home device attempting to send to currently DDOSed server\"; sid:&;)"
+ddos_block_rule_icmp = "drop icmp $HOME_NET any -> [] any (msg: \"Home device attempting to send to currently DDOSed server\"; sid:&;)"
+ddos_block_rule_ip = "drop ip $HOME_NET any -> [] any (msg: \"Home device attempting to send to currently DDOSed server\"; sid:&; )"
 
 
 
@@ -104,16 +107,23 @@ class ddos_cron_class:
 						print("ADDING NEW COMMANDS")
 						new_command=""
 						with open(self.ddos_rule_path,"a") as f:
-
 							# write IP addr into new command and append it
 							process_command = ddos_block_rule_ip.split("[")
-							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							process_sid = process_command[1].split("&")
+							new_command = new_command+process_command[0]+"["+ip+process_sid[0]+str(random.randint(min_sid_val, max_sid_val))+process_sid[1]+"\n"
+							print ("DEBUG: RULE WAS "+new_command)							
+
 							process_command = ddos_block_rule_icmp.split("[")
-							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							process_sid = process_command[1].split("&")
+							new_command = new_command+process_command[0]+"["+ip+process_sid[0]+str(random.randint(min_sid_val, max_sid_val))+process_sid[1]+"\n"
+							
 							process_command = ddos_block_rule_udp.split("[")
-							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							process_sid = process_command[1].split("&")
+							new_command = new_command+process_command[0]+"["+ip+process_sid[0]+str(random.randint(min_sid_val, max_sid_val))+process_sid[1]+"\n"
+							
 							process_command = ddos_block_rule_tcp.split("[")
-							new_command = new_command+process_command[0]+"["+ip+process_command[1]+"\n"
+							process_sid = process_command[1].split("&")
+							new_command = new_command+process_command[0]+"["+ip+process_sid[0]+str(random.randint(min_sid_val, max_sid_val))+process_sid[1]+"\n"
 							f.write(new_command+"\n")
 
 		# now that whole list is processed, replace ddos_path
