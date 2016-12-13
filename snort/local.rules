@@ -1,0 +1,12 @@
+drop ( msg: "REPUTATION_EVENT_BLACKLIST"; sid: 1; gid: 136; rev: 1; metadata: rule-type preproc ; classtype:bad-unknown; )
+
+alert ( msg: "REPUTATION_EVENT_WHITELIST"; sid: 2; gid: 136; rev: 1; metadata: rule-type preproc ; classtype:bad-unknown; )
+
+#alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"ICMP PING NMAP"; dsize:8; itype:8; reference:arachnids,162; classtype:attempted-recon; sid:469; rev:3;)
+
+#alert icmp any any -> $HOME_NET any (msg:"This is our tcp attack pattern!"; sid:10000001; rev:001;)
+
+#alert icmp $EXTERNAL_NET any -> any any (msg: "ICMP Detected"; sid:466;)
+#alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"ICMP ATTACK PATTERN!"; itype:8; content:"|deadb33f|"; depth:32; classtype:misc-activity; sid:483; rev:5;)
+
+alert ip any any -> $HOME_NET any (content:    "cat"; msg:i "Cat word matched"; sid: 446;)

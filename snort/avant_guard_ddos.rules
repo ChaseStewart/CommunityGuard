@@ -1,0 +1,10 @@
+drop ip $HOME_NET any -> [184.25.204.41] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5490793; )
+drop icmp $HOME_NET any -> [184.25.204.41] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5401949;)
+drop udp $HOME_NET any -> [184.25.204.41] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5581252;)
+drop tcp $HOME_NET any -> [184.25.204.41] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5199886;)
+
+drop ip $HOME_NET any -> [7.7.7.7] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5153191; )
+drop icmp $HOME_NET any -> [7.7.7.7] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5338917;)
+drop udp $HOME_NET any -> [7.7.7.7] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5857487;)
+drop tcp $HOME_NET any -> [7.7.7.7] any (msg: "Home device attempting to send to currently DDOSed server"; sid:5598925;)
+drop tcp any any -> any any (flags: S; msg:"Possible TCP DoS"; flow: stateless; threshold: type both, track by_dst, count 70, seconds 10; sid:10001;rev:1;)
