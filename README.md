@@ -1,16 +1,16 @@
 # README #
 
+CU Boulder ECEN 5023
 Adv NetSys Final Project
 
 Chase E Stewart and Anne Vasu
 
 ### What is this repository for? ###
 
-* This repository holds SQL, Python, and BBB configuration code  as version control
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* This repository holds SQL, Python, Snort, and BBB configuration code for the Avant-Guard project
+* For more information, read our paper when it comes out.
 
 ### How do I get set up? ###
 
-* Read our Google Doc!
-
+* Request our Google document with setup procedure
+* TODO maybe we will set up an ansible deployment or otherwise make this more user friendly.
