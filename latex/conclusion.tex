@@ -10,15 +10,26 @@ To demonstrate the novelty and benefits of the project, we implemented a very sm
     \item Create the \servname server tables and input processing.
     \item Describe and address several potential attack models against the \servname server design through its architecture and security permissions.
     \item Demonstrate alerting and blocking traffic using the \nodename, as well as push to/pull from the \servname server.
-    \item Demonstrate that even using our the prototype device with sub-optimal hardware had very minimum impact on performance.
+    \item Demonstrate that using the prototype \nodename with sub-optimal hardware had a low impact on a user's internet browsing performance, and that there is much room for improvement in this area.
 \end{itemize}
 
 \subsection{Further Work}
 \label{sec:concl:further}
-We have tested this project on a very small scale utilizing two BeagleBone Black devices communicating to one AWS server. There remains design work to be done on the scaling of the project as we believe that the benefit of this system scales proportionally to the proportion of subnets utilizing \sysname. It is still left to be determined whether there would be only one \servname server or perhaps several \servname servers separated by region, and it is unknown how such a design would affect the performance and security of the \sysname system. \\
+We have tested this system on a very small scale utilizing two BeagleBone Black devices communicating to one AWS server- we can think of several areas of further development for \sysname. A list of said developments would include:
 
-Another great follow-up to this project would be to re-implement the project with a more specialized hardware, or perhaps even to investigate running a \nodename as code on a router itself. We believe that the performance issues that result from running an in-line \nodename would be alleviated with the introduction of a more specialized hardware device. \\
+\begin{enumerate}
+\item Creating a very large-scale implementation ( > 10,000 \nodenames) and testing its performance and security
+\item Breaking up \servnames into regions and/or caching the blacklist so as to bound its growth
+\item Incorporating \sysname into a router rather than an additional device
+\item Re-implementing the \nodename with more specialized hardware and benchmarking its performance
+\item Optimizing the Snort configuration and rules to fit the right hardware and threat model
+\item Running multiple Snort instances in a multi-core device to prevent downtime while Snort rules reload
+\end{enumerate}
 
-As the number of \nodenames and the number of reported threats would rise over time, the list of threats within the \servname might become quite unmanageable. To solve this problem, we imagine a sort of caching on threats based on frequency and geographical prevalence of attacks. Additionally, a few levels of threat caching would improve performance while still keeping the \nodename current and robust to attacks. \\
+%Some such area There remains design work to be done on the scaling of the project as we believe that the benefit of this system scales proportionally to the proportion of subnets utilizing \sysname. It is still left to be determined whether there would be only one \servname server or perhaps several \servname servers separated by region, and it is unknown how such a design would affect the performance and security of the \sysname system. \\
 
-Finally- the set of rules used by Snort are not run-time configurable as it stands, but there are ways to achieve this such as running two instances of Snort simultaneously with shared memory and a multi-core processor. A future implementation with specialized software will solve this issue and keep the \nodename's IPS running 100\% of the time.
+%Another great follow-up to this project would be to re-implement the project with a more specialized hardware, or perhaps even to investigate running a \nodename as code on a router itself. We believe that the performance issues that result from running an in-line \nodename would be alleviated with the introduction of a more specialized hardware device. \\
+
+%As the number of \nodenames and the number of reported threats would rise over time, the list of threats within the \servname might become quite unmanageable. To solve this problem, we imagine a sort of caching on threats based on frequency and geographical prevalence of attacks. Additionally, a few levels of threat caching would improve performance while still keeping the \nodename current and robust to attacks. \\
+
+%Finally- the set of rules used by Snort are not run-time configurable as it stands, but there are ways to achieve this such as running two instances of Snort simultaneously with shared memory and a multi-core processor. A future implementation with specialized software will solve this issue and keep the \nodename's IPS running at all times.

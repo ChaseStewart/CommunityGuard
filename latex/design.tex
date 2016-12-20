@@ -1,9 +1,8 @@
 \section{System Design}
 
-% TODO I know I need to crop this
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{figs/macro.png}
+    \includegraphics[height=5cm]{figs/macro.png}
     \caption{\sysname macro-level architecture}
     \label{fig:macro}
 \end{figure}
@@ -11,9 +10,9 @@
 
 \label{sec:design}
 
-Figure~\ref{fig:macro} shows the high-level design of \sysname. The keystone of the proposed architecture is the \sysname IPS device - also known as the \nodename, which had to be placed in a position where it could view the entire network traffic flowing into and out of a user's network, and block all suspicious traffic. The addition of the device had to be as non-intrusive as possible, requiring no modification in Modem or Router configuration. \\
+Figure\ref{fig:macro} shows the high-level design of \sysname. The keystone of the proposed architecture is the \sysname IPS device - also known as the \nodename, which must be placed in a position where it can view the entire network traffic flowing into and out of a user's network, and block all suspicious traffic. The addition of the device must be as non-intrusive as possible, requiring no modification in Modem or Router configuration. \\
 
-Based on these factors, the ideal placement of the \nodename was chosen between the Modem and the Router. For networks using a Modem and a Router on the same device, we foresee that a production scale implementation of \sysname would place the \nodename hardware within the same box as the Modem and the Router, therefore maintaining the same architecture as shown in Figure~\ref{fig:macro}. Such \nodenames placed at the entry point of home networks can create a solid net of protection that communicates threats as soon as they emerge. It must be noted that the responsiveness and accuracy of \sysname in deterring threats, and especially its ability to mitigate DDoS attacks, is directly proportional to the number of subnets that use this system; ideally there would be a \nodename within every household and business subnet.
+Based on these factors, the ideal placement of the \nodename is between a Modem and Router. For networks using a Modem and a Router on the same device, we foresee that a production scale implementation of \sysname would place the \nodename hardware within the same box as the Modem and the Router, therefore maintaining the same architecture as shown in Figure~\ref{fig:macro}. Such \nodenames placed at the entry point of home networks can create a solid net of protection that can communicate threats as soon as they emerge. It must be noted that the responsiveness and accuracy of \sysname in deterring threats, and especially its ability to mitigate DDoS attacks, is directly proportional to the number of subnets that use this system; ideally there would be a \nodename within every household and business subnet.
 
 \subsection{\nodename}
 \label{sec:design:guardian}
@@ -66,7 +65,7 @@ Finally, the third cron job runs once every day at some random time and fetches 
     \label{fig:blacklistserver}
 \end{figure}
 
-The \servname server is the source of intelligence for the \nodenames that it services. The server runs a database and a couple of cron job timed events to process the information within its database. This server uses its database tables to aggregate threats presented by all collected guardian nodes, process them to determine valid threats, and then present them for individual guardian nodes to read and process. As this server is an obvious line of attack for one who would wish to halt the \sysname service, it is foreseen that the server will be elastically-scaling and secure in a production level implementation. 
+The \servname is the source of intelligence for the \nodenames that it services. This server runs a database and a couple of cron job timed events to process the information within its database. This server uses its database tables to aggregate threats presented by all collected guardian nodes, process them to determine valid threats, and then present them for individual guardian nodes to read and process. As this server is an obvious line of attack for one who would wish to halt the \sysname service, it is foreseen that the server will be elastically-scaling and secure in a production level implementation. 
 
 \subsubsection{Attack Models}
 \label{sec:design:attacks}
