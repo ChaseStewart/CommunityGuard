@@ -1,18 +1,20 @@
 \section{System Design}
 
-\begin{figure}
-    \centering
-    \includegraphics[height=5cm]{figs/macro.png}
-    \caption{\sysname macro-level architecture}
-    \label{fig:macro}
-\end{figure}
-
 
 \label{sec:design}
 
 Figure\ref{fig:macro} shows the high-level design of \sysname. The keystone of the proposed architecture is the \sysname IPS device - also known as the \nodename, which must be placed in a position where it can view the entire network traffic flowing into and out of a user's network, and block all suspicious traffic. The addition of the device must be as non-intrusive as possible, requiring no modification in Modem or Router configuration. \\
 
-Based on these factors, the ideal placement of the \nodename is between a Modem and Router. For networks using a Modem and a Router on the same device, we foresee that a production scale implementation of \sysname would place the \nodename hardware within the same box as the Modem and the Router, therefore maintaining the same architecture as shown in Figure~\ref{fig:macro}. Such \nodenames placed at the entry point of home networks can create a solid net of protection that can communicate threats as soon as they emerge. It must be noted that the responsiveness and accuracy of \sysname in deterring threats, and especially its ability to mitigate DDoS attacks, is directly proportional to the number of subnets that use this system; ideally there would be a \nodename within every household and business subnet.
+\begin{figure}
+    \centering
+    \includegraphics[height=4.4cm]{figs/macroarch.pdf}
+    \caption{\sysname macro-level architecture}
+    \label{fig:macro}
+\end{figure}
+
+
+
+Based on these factors, the ideal placement of the \nodename is between a Modem and Router. For networks using a Modem and a Router on the same device, we foresee that a production scale implementation of \sysname would place the \nodename hardware within the same box as the Modem and the Router, therefore maintaining the same architecture as shown in Figure~\ref{fig:macro}. Such \nodenames placed at the entry point of home networks can create a solid net of protection that can communicate threats as soon as they emerge. It must be noted that the capability of \sysname in deterring threats (and especially its ability to stop DDoS attacks) is proportional to the amount of subnets that use a \nodename; ideally there would be a \nodename within every household and business subnet.
 
 \subsection{\nodename}
 \label{sec:design:guardian}
@@ -37,20 +39,20 @@ The first cron job runs periodically and reads a log created by Snort that conta
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{figs/ddostable.png}
+    \includegraphics[width=0.95\linewidth]{figs/ddosserv.pdf}
     \caption{Outbound DDoS prevention Algorithm}
     \label{fig:ddostable}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=5cm, height=6cm]{figs/guardiannode.png}
+    \includegraphics[height=5.5cm]{figs/microarch.pdf}
     \caption{Anatomy of a \servname}
     \label{fig:guardian}
 \end{figure}
 
 A second cron job runs periodically to fetch information from a DDoS watch list available on the \servname described below as part of the Outgoing DDoS prevention mechanism (server-side is described in Section \ref{sec:design:serverddos}). If the database provides new IP addresses (for which rules do not exist on the \nodename yet) that are currently being DDoSed, the cron job creates and adds Snort rules to drop all such outgoing DDoS traffic, thus clipping off the attack at the compromised source itself. 
-This algorithm is depicted in Figure ~\ref{fig:ddostable}; Such a mechanism, when repeated over all \servnames, can prevent a DDoS attack such as the DYN DDoS attack. \\
+This algorithm is depicted in Figure ~\ref{fig:ddostable}; Such a mechanism, when repeated over all \servnames, can prevent a DDoS attack from the source. \\
 
 Finally, the third cron job runs once every day at some random time and fetches the latest bad IP list from the \servname and adds it to the Snort IP Blacklist. It also fetches Snort rules from Emerging Threats ~\cite{emerging} to defend against new and emerging attack patterns. These three cron jobs, combined with Snort running on all \nodenames, together establish a system of protection that learns, communicates, and has the capacity to prevent most malware attacks.
 
@@ -60,22 +62,23 @@ Finally, the third cron job runs once every day at some random time and fetches 
 % TODO I know I need to crop this
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{figs/blacklistserver.png}
-    \caption{\servname push and pull architecture}
+    \includegraphics[width=0.95\linewidth]{figs/blacklist.pdf}
+    \caption{\servname push and pull }
     \label{fig:blacklistserver}
 \end{figure}
 
-The \servname is the source of intelligence for the \nodenames that it services. This server runs a database and a couple of cron job timed events to process the information within its database. This server uses its database tables to aggregate threats presented by all collected guardian nodes, process them to determine valid threats, and then present them for individual guardian nodes to read and process. As this server is an obvious line of attack for one who would wish to halt the \sysname service, it is foreseen that the server will be elastically-scaling and secure in a production level implementation. 
+The \servname is the source of intelligence for the \nodenames that it services. This server runs a database and a couple of cron job timed events to process the information within its database. This server uses its database tables to aggregate threats presented by all collected guardian nodes, process them to determine valid threats, and then present them for individual guardian nodes to read and process. As this server is an obvious target for one who would wish to halt the \sysname service, it is foreseen that the server will be elastically-scaling and secure in a production level implementation. 
 
 \subsubsection{Attack Models}
 \label{sec:design:attacks}
 We assume that a user will not attempt to attack or compromise the availability or function own \nodename since our system aims to protect users who are unaware that their devices have been compromised. Furthermore, the \nodename itself can be fortified from external attacks through a hardened OS image and security best practices. This leaves a malicious user two possible vectors of attack for causing harm to a particular user- either attempting to get harmful traffic through the \nodename, or else reverse-engineering the \nodename to attack the \servname itself. 
 We designed the functionality of the \servname while keeping the following attack models in mind:
 
+A malicious user may attempt to:
 \begin{enumerate}
-\item A malicious user may attempt to add useful IPs to the blacklist to block them for users
-\item A malicious user may attempt to remove blacklisted IPs from the blacklist
-\item A malicious user may attempt to read user data from the list
+\item add useful IPs to the blacklist to block them for users
+\item remove blacklisted IPs from the blacklist
+\item read user data from the list
 \end{enumerate}
 
 \subsubsection{Server Blacklist architecture}

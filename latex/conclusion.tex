@@ -4,7 +4,7 @@
 \subsection{Conclusion}
 \label{sec:concl:main}
 As network security will only become more crucial over time, we aspire to a future where users' personal area networks and devices defend themselves and each other from emerging threats. To this end, we introduce \sysname, an in-line intrusion prevention system where a \nodename in each subnet shares new threats with nodes in other subnets. This provides a sort of herd immunity against new attacks. As soon as an attack claims a victim, all of the victim's peers will be informed, and will repel the same type of attack against their own subnets. We introduce a high-level architecture for the entire system, as well as design considerations for individual devices and for the \servname. We consider some potential attack vectors against the server and show how the design of the server mitigates such attacks.  \\
-To demonstrate the novelty and benefits of the project, we implemented a very small scale version of the architecture. We used two BeagleBone Black embedded systems to each host a \nodename and created an \sysname using a medium-class Amazon Web Services EC2 instance. Using this minimum-viable model, we configured and implemented the necessary software on each device, and then used this setup to test the architecture and the performance of the \sysname system. Through this implementation, we were able to do the following:
+To demonstrate the novelty and benefits of \sysname, we implemented a very small scale version of the architecture. We used two BeagleBone Black embedded systems to each host a \nodename and created an \sysname using a medium-class Amazon Web Services EC2 instance. Using this minimum-viable model, we configured and implemented the necessary software on each device, and then used this setup to test the architecture and the performance of the \sysname system. Through this implementation, we were able to do the following:
 
 \begin{itemize}
     \item Create the \servname server tables and input processing.
@@ -15,13 +15,13 @@ To demonstrate the novelty and benefits of the project, we implemented a very sm
 
 \subsection{Further Work}
 \label{sec:concl:further}
-We have tested this system on a very small scale utilizing two BeagleBone Black devices communicating to one AWS server- we can think of several areas of further development for \sysname. A list of said developments would include:
+We have tested this system on a very small scale utilizing two BeagleBone Black devices communicating to one AWS server- we can think of several areas of further development for \sysname, including the following:
 
 \begin{enumerate}
-\item Creating a very large-scale implementation ( > 10,000 \nodenames) and testing its performance and security
+\item Creating a very large-scale implementation ( \textgreater 10,000 \nodenames) and testing its performance and security
 \item Breaking up \servnames into regions and/or caching the blacklist so as to bound its growth
 \item Incorporating \sysname into a router rather than an additional device
-\item Re-implementing the \nodename with more specialized hardware and benchmarking its performance
+\item Re-implementing and performance-testing the \nodename with more specialized hardware
 \item Optimizing the Snort configuration and rules to fit the right hardware and threat model
 \item Running multiple Snort instances in a multi-core device to prevent downtime while Snort rules reload
 \end{enumerate}
