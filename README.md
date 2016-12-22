@@ -18,7 +18,8 @@ In order to get the whole system working, you will need to create one or more Gu
 * Follow sections 9-11 of this [tutorial](https://s3.amazonaws.com/snort-org-site/production/document_files/files/000/000/090/original/Snort_2.9.8.x_on_Ubuntu_12-14-15.pdf) from Snort.org
 * From this instance install git and ansible by calling `sudo apt-get install git ansible`
 * Clone the .git repo here by calling `git clone https://bitbucket.org/ChaseEStewart/advnetsysfinal` from the device
-* Finally, run the TODO Guardian ansible deployment script to install our needed code into the guardian node (code will resemble `ansible-playbook guardian/deploy/main.yml`)
+* Run the TODO Guardian ansible deployment script to install our needed code into the guardian node (code will resemble `ansible-playbook guardian/deploy/main.yml`)
+* You will need to configure the device before you are able to use it- right now this happens by editing /bbb_user/bbb_cron_conf.cfg, one day it will be a webserver that you will be able to navigate to.
 
 #### Community Outpost ####
 * Get an account with a cloud services provider (we used Amazon Web Services )
@@ -26,3 +27,4 @@ In order to get the whole system working, you will need to create one or more Gu
 * From this instance install git and ansible by calling `sudo yum install git ansible`
 * Clone the .git repository here by calling `git clone https://bitbucket.org/ChaseEStewart/advnetsysfinal` from the instance
 * run the TODO Outpost ansible deployment script (code will resemble `ansible-playbook outpost/deploy/main.yml`)
+* You will need to configure the outpost before you are able to use it- right now this happens by editing  aws_server/aws_cron.cfg, one day it will also be a webserver that you will be able to navigate to.
