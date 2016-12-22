@@ -9,13 +9,13 @@ First, the \emph{Guardian Node} is capable of
 serving as a device which all traffic between a given home's devices (computers and IoT devices)
 and the Internet passes through.  This node is capable of having network functions
 deployed onto it and remotely configured.  For the purposes of this paper,
-we use a BeagleBone Black device as a prototype, and elaborate in Section~\ref{sec:design}.
+we use a BeagleBone Black device as a prototype, and elaborate in Sections~\ref{sec:design:hardware} and ~\ref{sec:design:software}.
 
 Second, the \emph{Community Outpost} is a central manager running on a cloud server which
 interfaces with each of the Guardian Nodes. The Community Outpost will monitor this 
 traffic for any security concerns and deploy defenses as needed.   
 For our initial prototype, we focus on the deployment of the Snort IPS system 
-and automatic management of its configuration, elaborated in Section~\ref{sec:design}.
+and automatic management of its configuration, elaborated in Section~\ref{sec:design:server}.
 
 Together, these components provide crowdsourced monitoring and remotely managed security.  
 Each Guardian Node is capable of monitoring and sending information to the Community Outpost server
