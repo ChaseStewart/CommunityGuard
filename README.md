@@ -14,9 +14,15 @@ Chase E Stewart, Anne Vasu, and Professor Eric Keller
 In order to get the whole system working, you will need to create one or more Guardian Node(s) as well as one or a few Community Outposts.
 
 #### Guardian Node ####
-* First, start with an embedded system that runs Debian Linux such as the Beaglebone Black
-* Second, follow sections 9-11 of this [tutorial](https://s3.amazonaws.com/snort-org-site/production/document_files/files/000/000/090/original/Snort_2.9.8.x_on_Ubuntu_12-14-15.pdf) from Snort.org
-* next, run the TODO ansible deployment script to install our needed code into the guardian node
+* Start with an embedded system (or one day router) that runs Debian Linux such as the Beaglebone Black
+* Follow sections 9-11 of this [tutorial](https://s3.amazonaws.com/snort-org-site/production/document_files/files/000/000/090/original/Snort_2.9.8.x_on_Ubuntu_12-14-15.pdf) from Snort.org
+* From this instance install git and ansible by calling `sudo apt-get install git ansible`
+* Clone the .git repo here by calling `git clone https://bitbucket.org/ChaseEStewart/advnetsysfinal` from the device
+* Finally, run the TODO Guardian ansible deployment script to install our needed code into the guardian node (code will resemble `ansible-playbook guardian/deploy/main.yml`)
 
-* Request our Google document with setup procedure
-* TODO maybe we will set up an ansible deployment or otherwise make this more user friendly.
+#### Community Outpost ####
+* Get an account with a cloud services provider (we used Amazon Web Services )
+* Create an instance with a Linux OS (we support RHEL or CentOS)
+* From this instance install git and ansible by calling `sudo yum install git ansible`
+* Clone the .git repository here by calling `git clone https://bitbucket.org/ChaseEStewart/advnetsysfinal` from the instance
+* run the TODO Outpost ansible deployment script (code will resemble `ansible-playbook outpost/deploy/main.yml`)
