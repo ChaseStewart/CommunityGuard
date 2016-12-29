@@ -1,0 +1,24 @@
+---
+
+- name: pip install needed packages
+  pip: name={{ item }} state=latest
+    with_items:
+    - MySQLdb
+    - ConfigParser
+    - sshtunnel
+    - hashlib
+
+- name: copy src folders
+  copy: src=../../../../bbb_user /home/{{ user_name }}
+
+- name: install crontab 1 
+  cron:
+    minute: "0, 15, 30, 45"
+    job: "/home/{{ user_name }}/bbb_cron.sh"
+
+- name: install crontab 2 
+  cron:
+    hour: "1"
+    minute: "0"
+    job: "/home/{{ user_name }}/bbb_ddos_cron.sh"
+
