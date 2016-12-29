@@ -16,7 +16,7 @@ In order to get the whole system working, you will need to create one or more Gu
 #### Guardian Node ####
 * Start with an embedded system (or one day router) that runs Debian Linux such as the Beaglebone Black
 * Follow sections 9-11 of this [tutorial](https://s3.amazonaws.com/snort-org-site/production/document_files/files/000/000/090/original/Snort_2.9.8.x_on_Ubuntu_12-14-15.pdf) from Snort.org
-* From this instance install git and ansible by calling `sudo apt-get install git ansible`
+* From this instance install git and ansible by calling `sudo apt-get install git` and then following [this link](http://docs.ansible.com/ansible/intro_installation.html) for ansible installation
 * Clone the .git repo here by calling `git clone https://bitbucket.org/ChaseEStewart/advnetsysfinal` from the device
 * Run the TODO Guardian ansible deployment script to install our needed code into the guardian node (code will resemble `ansible-playbook guardian/deploy/main.yml`)
 * You will need to configure the device before you are able to use it- right now this happens by editing /bbb_user/bbb_cron_conf.cfg, one day it will be a webserver that you will be able to navigate to.
@@ -24,6 +24,7 @@ In order to get the whole system working, you will need to create one or more Gu
 #### Community Outpost ####
 * Get an account with a cloud services provider (we used Amazon Web Services )
 * Create an instance with a Linux OS (we support RHEL or CentOS)
+* Install EPEL packages- in case of CentOS7/ RHEL, follow [these instructions](http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/)
 * From this instance install git and ansible by calling `sudo yum install git ansible`
 * Clone the .git repository here by calling `git clone https://bitbucket.org/ChaseEStewart/advnetsysfinal` from the instance
 * run the TODO Outpost ansible deployment script (code will resemble `ansible-playbook outpost/deploy/main.yml`)
