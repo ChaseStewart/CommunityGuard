@@ -36,22 +36,24 @@ CREATE TABLE ddos_watch_list (id INT UNSIGNED NOT NULL AUTO_INCREMENT, ip_addr I
 
 -- DBWriter is used to read the bad_ipv4_output table
 
-GRANT USAGE ON adv_netsys_final.* TO 'dbwriter'@'localhost';
-DROP USER 'dbwriter'@'localhost';
+--GRANT USAGE ON adv_netsys_final.* TO 'dbwriter'@'localhost';
+DROP USER IF EXISTS 'dbwriter'@'localhost';
 CREATE USER 'dbwriter'@'localhost' IDENTIFIED BY 'I!AmTheFly';
 GRANT INSERT ON adv_netsys_final.bad_ipv4_input TO 'dbwriter'@'localhost';
 GRANT INSERT ON adv_netsys_final.mac_addr_registry TO 'dbwriter'@'localhost';
 
 -- DBWriter is used to write to the bad_ipv4_input table
-GRANT USAGE ON adv_netsys_final.* TO 'dbreader'@'localhost';
-DROP USER 'dbreader'@'localhost';
+--GRANT USAGE ON adv_netsys_final.* TO 'dbreader'@'localhost';
+DROP USER IF EXISTS 'dbreader'@'localhost';
 CREATE USER 'dbreader'@'localhost' IDENTIFIED BY 'I!AmTheFly';
 GRANT SELECT ON adv_netsys_final.bad_ipv4_output TO 'dbreader'@'localhost';
 GRANT SELECT ON adv_netsys_final.ddos_watch_list TO 'dbreader'@'localhost';
 
 -- DBAdmin is not accessible by users and is used to run the intermediate cron commands that turn input into output
-GRANT USAGE ON adv_netsys_final.* TO 'newdbadmin'@'localhost';
-DROP USER 'newdbadmin'@'localhost';
+--GRANT USAGE ON adv_netsys_final.* TO 'newdbadmin'@'localhost';
+DROP USER IF EXISTS 'newdbadmin'@'localhost';
 CREATE USER 'newdbadmin'@'localhost' IDENTIFIED BY 'I!AmTheFly';
 GRANT ALL ON adv_netsys_final.* TO 'newdbadmin'@'localhost';
+
+DROP DATABASE IF EXISTS temp_db;
 

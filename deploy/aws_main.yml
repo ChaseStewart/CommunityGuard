@@ -2,7 +2,7 @@
 
 - name: set up target server(s) to be able to run the MariaDB server
   hosts: all # limit from set of hosts using a commandline variable - jenkins jobs are config'ed to do this
-  become: no
+  connection: local
   
   roles:
     - install_packages # first do basic updates + package installs

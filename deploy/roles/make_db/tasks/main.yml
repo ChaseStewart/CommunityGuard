@@ -1,34 +1,42 @@
----
-
 - name: Add repo file
-  template: src=mariadb_centos.repo.j2 dest=/etc/yum.repos.d/mariadb.repo owner=root group=root mode=0644
+  template: src=roles/make_db/files/mariadb_centos.repo.j2 dest=/etc/yum.repos.d/mariadb.repo owner=root group=root mode=0644
+  become: yes
 
 - name: Install MariaDB
   yum: name={{ item }} enablerepo=mariadb state=present
   with_items:
     - MariaDB-server
     - MariaDB-client
+  become: yes
 
 - name: update pip
   command: pip install --upgrade pip
+  become: yes
 
 - name: Install the python MySQLdb module
   pip: name={{ item }}
   with_items:
   - MySQL-python
   - pexpect
-
-- name: pull down Dad Data
-  copy: src=../../../../aws_user dest=/home/{{user_name}}
+  become: yes
 
 - name: Enable and start MySQL
-  service: name=mysql state=started enabled=yes
+  service: name=mariadb state=started enabled=yes
+  become: yes
 
-  mysql_user: name=remote_poller host="%" password={{ extra_password }} priv=*.*:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP
 
 - name: create community outpost db
-  mysql_db: name=outpost_db state=present
+  mysql_db: name=temp_db state=present
+  become: yes
+
+- name: Create MySQL user
+  mysql_user: name=remote_poller host="localhost" password={{ extra_password }} priv=*.*:ALL,GRANT
+  become: yes
 
 - name: create table by importing sql
-  mysql_db: name=outpost_db state=import target=../../../../mysql/create_table.sql
+  mysql_db: name=temp_db state=import target=../mysql/create_table.sql login_user=remote_poller login_password={{extra_password}} login_host="localhost" 
+  become: yes
 
+- name: remove temp database
+  mysql_db: name=temp_db state=absent
+  become: yes

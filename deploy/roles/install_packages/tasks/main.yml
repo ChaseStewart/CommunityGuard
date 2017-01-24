@@ -4,16 +4,16 @@
   yum:
     name: '*'
     state: latest
+  become: yes
 
 - name: install needed yum packages
-  yum: 
-    name: '{{ item }}'
-    state: latest
-    with_items:
-      - vim
-      - python-pip
-      - gcc
-      - python-devel
-      - mysql-devel
+  yum: name={{item}} state=present
+  with_items:
+  - vim
+  - python-pip
+  - gcc
+  - python-devel
+  - mysql-devel
+  become: yes
  
 
