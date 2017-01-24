@@ -27,5 +27,5 @@ In order to get the whole system working, you will need to create one or more Gu
 * Install EPEL packages- in case of CentOS7/ RHEL, follow [these instructions](http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/)
 * From this instance install git and ansible by calling `sudo yum install git ansible`
 * Clone the .git repository here by calling `git clone https://bitbucket.org/ChaseEStewart/advnetsysfinal` from the instance
-* run the TODO Outpost ansible deployment script (code will resemble `ansible-playbook outpost/deploy/main.yml`)
+* run the Outpost ansible deployment script by typing `cd advnetsysfinal/deploy` and then typing `ansible-playbook aws_main.yml -i hosts -e "user_name=<your username> extra_password=<your MySQL password>" `
 * You will need to configure the outpost before you are able to use it- right now this happens by editing  aws_server/aws_cron.cfg, one day it will also be a webserver that you will be able to navigate to.
