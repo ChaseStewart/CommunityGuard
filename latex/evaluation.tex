@@ -48,6 +48,12 @@ The Guardian Node is designed to be inserted in-line somewhere before the Router
 %    \caption{Sample Snort rule and log}
 %    \label{fig:snortrule}
 %\end{figure}
+\begin{figure}[b]
+    \includegraphics[width=0.8\columnwidth]{figs/SnortRam.png}
+    \caption{RAM Utilization on the Guardian Node}
+    \label{fig:ramutil}
+\end{figure}
+
 
 \begin{figure}
 	\centering
@@ -71,11 +77,4 @@ Snort provides the freedom to configure as few rules or as many rules as require
 
 The CommunityGuard team  feels that the set of running Snort rules can be further optimized for better processor and RAM utilization. Optimization of Snort rules will be pursued as future work. It is to be noted that increasing traffic from 100 Mbps to 400 Mbps will increase the RAM requirement to almost 1GB for 100-10000 rules. The implementation of Snort on the Guardian Node was using much less RAM since network traffic was limited to 100 Mbps by the Ethernet card. Dealing with higher traffic speeds would require specialized hardware. In an ideal implementation, the Guardian Node would have a network card with performance specifications equivalent to it's router's network card.
 
-\begin{figure}
-    \centering
-%    \includegraphics[width=0.85\linewidth,  height=2cm]{figs/SnortRam.png}
-    \includegraphics[width=0.85\columnwidth]{figs/SnortRam.png}
-    \caption{RAM Utilization on the Guardian Node}
-    \label{fig:ramutil}
-\end{figure}
 

@@ -1,17 +1,18 @@
-\documentclass[sigconf]{acmart}
-%\documentclass{sig-alternate-10pt}
+%\documentclass[sigconf]{acmart}
+\documentclass{sig-alternate-05-2015}
+
 
 \usepackage{graphics}
 \usepackage{epsfig}
 \usepackage{color}
 \usepackage{hyperref}
-%\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{url} 
 \usepackage{underscore}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{times}
+\usepackage{balance}
 
 %
 % Get rid of excess white space, commands copied from:
@@ -23,24 +24,22 @@
 
 \newcommand{\eg}{{\em e.g., }}
 \newcommand{\ie}{{\em i.e., }}
-\newcommand{\paragraphb}[1]{\vspace{0.03in}\noindent{\bf #1} }
-\newcommand{\paragraphe}[1]{\vspace{0.03in}\noindent{\em #1} }
-\newcommand{\paragraphbe}[1]{\vspace{0.03in}\noindent{\bf \em #1} }
+%\newcommand{\paragraphb}[1]{\vspace{0.03in}\noindent{\bf #1} }
+%\newcommand{\paragraphe}[1]{\vspace{0.03in}\noindent{\em #1} }
+%\newcommand{\paragraphbe}[1]{\vspace{0.03in}\noindent{\bf \em #1} }
 %\newcommand{\comment}[1]{\textcolor{purple}{#1}}
 
 %Copyright
 \setcopyright{acmlicensed}
 
 %DOI
-\acmDOI{http://dx.doi.org/10.1145/3040992.3040997}
+\doi{http://dx.doi.org/10.1145/3040992.3040997}
 
 %ISBN
-\acmISBN{978-1-4503-4908-6/17/03}
+\isbn{978-1-4503-4908-6/17/03}
 
 % Conference
-\acmConference[SDN-NFV Sec'17]{SDN-NFV Sec'17}{March 22-24 2017}{ Scottsdale, AZ, USA}
-\acmYear{2017}
-\copyrightyear{2017} 
+\conferenceinfo{SDN-NFV Sec'17}{March 22-24 2017, Scottsdale, AZ, USA}
 
 % Price
 \acmPrice{15.00}
@@ -49,26 +48,27 @@
 \begin{document}
 \title{CommunityGuard: A Crowdsourced Home Cyber-Security System}
 
-\author{Chase E. Stewart}
-\affiliation{
-  \institution{University of Colorado Boulder}}
-\email{chase.stewart@colorado.edu}
-
-\author{Anne Maria Vasu}
-\affiliation{
-  \institution{University of Colorado Boulder}}
-\email{anne.vasu@colorado.edu}
-
-\author{Eric Keller}
-\affiliation{
-  \institution{University of Colorado Boulder}}
+\numberofauthors{3}
+\author{
+\alignauthor Chase E. Stewart \\
+\affaddr{University of Colorado Boulder} \\
+\email{chst9148@colorado.edu}
+\alignauthor Anne Maria Vasu \\
+\affaddr{University of Colorado Boulder} \\
+\email{anva7676@colorado.edu}
+\alignauthor Eric Keller \\
+\affaddr{University of Colorado Boulder} \\
 \email{eric.keller@colorado.edu}
+}
+
+
 
 \setlength{\pdfpagewidth}{8.5in}
 \setlength{\pdfpageheight}{11in}
 
-\thispagestyle{empty}
+%\thispagestyle{empty}
 
+\maketitle
 \begin{abstract}
 In this paper, we propose and implement CommunityGuard, a system which comprises of intelligent Guardian Nodes that learn and prevent malicious traffic from coming into and going out of a user's personal area network. In the CommunityGuard model, each Guardian Node tells others about emerging threats, blocking these threats for all users as soon as they begin. Furthermore, Guardian Nodes regularly update themselves with latest threat models to provide effective security against new and emerging threats. Our evaluation proves that CommunityGuard provides immunity against a range of incoming and outgoing attacks at all points of time with an acceptable impact on network performance. Oftentimes, the sources of DDoS attack traffic are personal devices that have been compromised without the owner's knowledge. We have modeled CommunityGuard to prevent such outgoing DDoS traffic on a wide scale which can hamstring the otherwise very frightening prospects of crippling DDoS attacks.
 \end{abstract}
@@ -90,19 +90,20 @@ In this paper, we propose and implement CommunityGuard, a system which comprises
 
 %\keywords{SDN Security; Crowdsourced Security; Intrusion Prevention; IOT Security}
 
-\maketitle
 
-%input{abstract}
+%input{abstract} - now occurs in this file
 \input{introduction}
 \input{arch}
 \input{design}
 \input{evaluation}
 \input{related}
 \input{conclusion}
-%\pagebreak
 
-%\footnotesize
+% set bibliography at the end
+\vfill\eject
+
+%\bibliographystyle{ACM-Reference-Format}
+\bibliographystyle{abbrv}
 \bibliography{refs}
-\bibliographystyle{ACM-Reference-Format}
 
 \end{document}
