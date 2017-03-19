@@ -44,6 +44,7 @@ class aws_cron_class:
 		cur = con.cursor()
 		cur.execute("""SELECT DISTINCT hash_val FROM mac_addr_registry;""")
 		for macaddr in cur:
+			print macaddr
 			self.valid_mac_list.append(macaddr[0]);
 
 
@@ -57,11 +58,13 @@ class aws_cron_class:
 		for item in cur:
 			hashval = item[1]
 			ip = item[0]
+			print (hashval)
+			print (self.valid_mac_list)
 			if hashval in self.valid_mac_list:
 				print str(ip)
 				self.in_list.append((ip,hashval))
 		print("in list is"+str(self.in_list))	
-		#cur.execute(""" TRUNCATE bad_ipv4_input""");
+		cur.execute(""" TRUNCATE bad_ipv4_input""");
 		con.commit()
 		print("in list is "+str(self.in_list))
 
@@ -75,18 +78,17 @@ class aws_cron_class:
 		cur.execute("""SELECT DISTINCT ip_addr, hash_val from bad_ipv4_input;""")
 
 		for item in self.in_list:
-			mac_ip_hash = hashlib.md5()
+			mac_ip_hash = hashlib.sha256()
 			mac_ip_hash.update(str(item[0]))
 			mac_ip_hash.update(str(item[1]))
 			hash_val = mac_ip_hash.digest()
-
-			cur.execute(""" SELECT COUNT(1) FROM bad_ipv4_master_list where hash =%s """, hash_val)
+			cur.execute(""" SELECT COUNT(1) FROM bad_ipv4_master_list where hash =%s """, [hash_val])
 			if (cur.fetchone()[0]):
 				print("Already have this!")
 				continue
 
-			cur.execute("""INSERT INTO bad_ipv4_master_list (hash) VALUES (%s);""",(hash_val))
-			cur.execute("""INSERT INTO bad_ipv4_output (ip_addr, flag_count) VALUES (%s,%s) ON DUPLICATE KEY UPDATE flag_count = flag_count+1;""",(item[0],1))
+			cur.execute("""INSERT INTO bad_ipv4_master_list (hash) VALUES (%s);""",[hash_val])
+			cur.execute("""INSERT INTO bad_ipv4_output (ip_addr, flag_count) VALUES (%s,%s) ON DUPLICATE KEY UPDATE flag_count = flag_count+1;""",[item[0],1])
 		con.commit()
 
 

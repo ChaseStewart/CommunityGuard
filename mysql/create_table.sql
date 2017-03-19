@@ -13,19 +13,19 @@ USE adv_netsys_final;
 /* Create all necessary tables*/
 
 -- Input table that all users can post to but nobody can read from
-CREATE TABLE bad_ipv4_input( id INT AUTO_INCREMENT, ip_addr INT UNSIGNED NOT NULL, hash_val BINARY(16) NOT NULL, primary key (id) );
+CREATE TABLE bad_ipv4_input( id INT AUTO_INCREMENT, ip_addr INT UNSIGNED NOT NULL, hash_val BINARY(64) NOT NULL, primary key (id) );
 
 -- Output table that all users can read from but nobody can post to
 CREATE TABLE bad_ipv4_output( ip_addr INT UNSIGNED NOT NULL, flag_count BIGINT UNSIGNED NOT NULL, primary key (ip_addr) );
 
 -- Intermediate table that holds unique mac_addrs users that are allowed to post
-CREATE TABLE mac_addr_registry (id INT AUTO_INCREMENT, hash_val BINARY(16) NOT NULL, primary key (id) );
+CREATE TABLE mac_addr_registry (id INT AUTO_INCREMENT, hash_val BINARY(64) NOT NULL, primary key (id) );
 
 -- Intermediate table that holds number of valid flags needed to blacklist a page
 CREATE TABLE flag_count (valid_flag_count BIGINT UNSIGNED, num_reg_users BIGINT UNSIGNED, primary key (num_reg_users) );
 
 -- Intermediate table that keeps all matches of valid MACADDR and IP
-CREATE TABLE bad_ipv4_master_list ( id INT UNSIGNED NOT NULL AUTO_INCREMENT, hash BINARY(16) NOT NULL, primary key (id) );
+CREATE TABLE bad_ipv4_master_list ( id INT UNSIGNED NOT NULL AUTO_INCREMENT, hash BINARY(64) NOT NULL, primary key (id) );
 
 -- DDoS prevention table
 CREATE TABLE ddos_watch_list (id INT UNSIGNED NOT NULL AUTO_INCREMENT, ip_addr INT UNSIGNED NOT NULL, primary key (id));
