@@ -48,10 +48,11 @@ class malicious_ip_class:
 
 	def blacklist_pull(self):
 		with SSHTunnelForwarder(
-			('35.160.253.104', 22),
+			#('35.160.253.104', 22),
+			("192.168.122.116"),
 			#  ssh_password="password",
 			ssh_private_key=self.private_key,
-			ssh_username="ec2-user",
+			ssh_username="edgo1494",
 			remote_bind_address=('127.0.0.1', 3306)) as server:
 		
 				self.ip_list = []
@@ -79,26 +80,26 @@ class malicious_ip_class:
 
 	def blacklist_push(self):
 		with SSHTunnelForwarder(
-			('35.160.253.104', 22),
+			#('35.160.253.104', 22),
+			("192.168.122.116"),
 			#  ssh_password="password",
 			ssh_private_key=self.private_key,
-			ssh_username="ec2-user",
+			ssh_username="edgo1494",
 			remote_bind_address=('127.0.0.1', 3306)) as server:
 
 				con = None
 				con = MySQLdb.connect(user=self.pushuser,passwd=self.password,db=self.db,host='127.0.0.1',port=server.local_bind_port)
 				cur = con.cursor()
-				mac_ip_hash = hashlib.md5()
+				mac_ip_hash = hashlib.sha256()
 				mac_ip_hash.update(str(self.salt_hash))
 				mac_ip_hash.update(str(self.my_mac))
 				self.hash_val = mac_ip_hash.hexdigest()
 				#cur.execute("INSERT INTO mac_addr_registry (hash_val) VALUES (\""+self.hash_val+"\");")
-				
 				for ip in self.ip_list:
 					if ip != "\n":
 						ip_num = struct.unpack("!I",socket.inet_aton(ip))[0]
 						print ("IP "+str(ip_num)+" complete")
-						cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, hash_val) VALUES (%s,%s);""",(ip_num,self.hash_val))
+						cur.execute("""INSERT INTO bad_ipv4_input (ip_addr, hash_val) VALUES (%s,%s);""",[ip_num,self.hash_val])
 				con.commit()
 		return
 
